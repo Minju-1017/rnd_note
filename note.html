@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>네오코스텍 연구소 시스템</title>
+
+    <style>
+        .layout {
+            display: flex;
+        }
+
+        nav {
+            width: 200px;
+        }
+
+        main {
+            flex: 1;
+        }
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			border-top: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+		}
+
+		th {
+			background-color: #f5f5f5;
+			border-bottom: 1px solid #ddd;
+			padding: 10px;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		td {
+			padding: 10px;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		.search {
+			margin-top: 50px;
+			margin-bottom: 50px;
+		}
+
+		.page-area {
+			display: flex;
+			justify-content: space-between;
+			margin-top: 20px;
+		}
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+        <nav>
+			<!-- 로그인 사용자 정보 -->
+			<div class="user-info">
+				<strong>홍연구</strong>
+				<p>담당 거래처 : A사</p>
+			</div>
+            <ul>
+                <li><a href="#">연구노트</a></li>
+                <li>
+                    <span>시스템관리</span>
+                    <ul>
+                        <li><a href="./code.html">코드관리</a></li>
+                        <li><a href="./codegroup.html">코드그룹</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">로그아웃</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h1>연구노트</h1>
+			<!-- 검색 영역 -->
+			<div class="search">
+				<form>
+					<label>기간</label>
+					<input type="text" placeholder="시작일">
+					<input type="text" placeholder="종료일">
+
+					<select>
+						<option selected>검색구분</option>
+						<option>제품명</option>
+						<option>거래처</option>
+						<option>담당자</option>
+						<option>부담당자</option>
+						<option>원료명</option>
+					</select>
+
+					<input type="text" placeholder="검색어">
+					<button type="submit">검색</button>
+					<button type="reset">초기화</button>
+				</form>
+			</div>
+
+			<!-- 테이블 영역 -->
+			<div>
+				<p>Total: 5</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th><input type="checkbox"></th>
+							<th>#</th>
+							<th>관리번호</th>
+							<th>제품명</th>
+							<th>거래처</th>
+							<th>담당</th>
+							<th>부담당</th>
+							<th>현재차수</th>
+							<th>상태</th>
+							<th>시작일</th>
+							<th>종료일</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>1</td>
+							<td>2024_1</td>
+							<td>촉촉스킨</td>
+							<td>B사</td>
+							<td>김연구</td>
+							<td>박연구</td>
+							<td>7차</td>
+							<td>확정</td>
+							<td>2024-01-01</td>
+							<td>2024-05-23</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" value="2" data-status="진행"></td>
+							<td>2</td>
+							<td>2024_2</td>
+							<td><a href="#" onclick="openNote(this)">쫀쫀앰플</a></td>
+							<td>A사</td>
+							<td>박연구</td>
+							<td>홍연구</td>
+							<td>2차</td>
+							<td>진행</td>
+							<td>2024-07-08</td>
+							<td>-</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" value="3" data-status="확정"></td>
+							<td>3</td>
+							<td>2025_7</td>
+							<td><a href="#" onclick="openNote(this)">물광크림</a></td>
+							<td>A사</td>
+							<td>김연구</td>
+							<td>홍연구</td>
+							<td>5차</td>
+							<td>확정</td>
+							<td>2025-12-20</td>
+							<td>2026-04-10</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>4</td>
+							<td>2026_1</td>
+							<td><a href="#" onclick="openNote(this)">겔마스크</a></td>
+							<td>B사</td>
+							<td>강연구</td>
+							<td>박연구</td>
+							<td>7차</td>
+							<td>진행</td>
+							<td>2026-01-31</td>
+							<td>-</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>5</td>
+							<td>2026_3</td>
+							<td>로즈우드립스틱</td>
+							<td>A사</td>
+							<td>박연구</td>
+							<td>김연구</td>
+							<td>15차</td>
+							<td>확정</td>
+							<td>2026-03-08</td>
+							<td>2026-08-18</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- 페이징 및 버튼 -->
+			<div class="page-area">
+
+				<!-- 페이징 -->
+				<div>
+					<a href="#">이전</a>
+					<a href="#">1</a>
+					<a href="#">2</a>
+					<a href="#">3</a>
+					<a href="#">다음</a>
+				</div>
+
+				<!-- 수정 / 삭제 -->
+				<div>
+					<button type="button" onclick="editNote()">수정</button>
+					<button type="button">삭제</button>
+				</div>
+
+			</div>
+        </main>
+    </div>
+
+	<script>
+		function editNote() {
+			const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+
+			if (checked.length > 1) {
+				alert("1개만 선택해 주세요.");
+				return;
+			}
+
+			if (checked.length === 0) {
+				alert("수정할 항목을 선택해 주세요.");
+				return;
+			}
+
+			const selected = checked[0];
+			const number = selected.value;
+			const status = selected.dataset.status;
+
+			if (status == "확정") {
+				alert("확정된 제품은 수정할 수 없습니다.");
+			}
+
+			if (number == "2") {
+				location.href = "./note_detail.html";
+			} else if (number == "3") {
+				location.href = "./note_detail_confirm.html";
+			}
+		}
+
+		function openNote(link) {
+			const row = link.closest("tr");
+			const company = row.cells[4].textContent;
+
+			if (company !== "A사") {
+				alert("담당 거래처 노트만 볼 수 있습니다.");
+				return;
+			}
+
+			const number = row.cells[1].textContent;
+
+			if (number === "2") {
+				location.href = "./note_detail.html";
+			} else if (number === "3") {
+				location.href = "./note_detail_confirm.html";
+			}
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head> 
+    <meta charset="UTF-8"> 
+    <title>네오코스텍 연구소 시스템</title>
+
+    <style>
+        .layout {
+            display: flex;
+        }
+
+        nav {
+            width: 200px;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        input {
+            padding: 5px;
+        }
+
+        .info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .info p {
+            margin: 10px;
+        }
+
+        .add-button {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .button-area {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .button-area button {
+            margin: 0 5px;
+        }
+
+        tfoot {
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <nav>
+			<!-- 로그인 사용자 정보 -->
+			<div class="user-info">
+				<strong>홍연구</strong>
+				<p>담당 거래처 : A사</p>
+			</div>
+            <ul>
+                <li><a href="#">연구노트</a></li>
+                <li>
+                    <span>시스템관리</span>
+                    <ul>
+                        <li><a href="./code.html">코드관리</a></li>
+                        <li><a href="./codegroup.html">코드그룹</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">로그아웃</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h1>처방표 작성</h1>
+
+            <!-- 연구 정보 -->
+            <div class="info">
+                <p>
+                    <strong>차수:</strong>
+                    <span id="round"></span>차
+                </p>
+                <p>
+                    <strong>점도:</strong>
+                    <select id="viscosity">
+                        <option value="">선택</option>
+                        <option value="묽음">묽음</option>
+                        <option value="보통">보통</option>
+                        <option value="끈적">끈적</option>
+                    </select>
+                </p>
+                <p>
+                    <strong>PH:</strong>
+                    <select id="ph">
+                        <option value="">선택</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                    </select>
+                </p>
+                <p>
+                    <strong>향:</strong>
+                    <select id="scent">
+                        <option value="">선택</option>
+                        <option value="나쁨">나쁨</option>
+                        <option value="좋음">좋음</option>
+                    </select>
+                </p>
+                <p>
+                    <strong>수정방안:</strong>
+                    <input type="text" id="revision">
+                </p>
+                <p>
+                    <strong>날짜:</strong>
+                    <span id="date"></span>
+                </p>
+            </div>
+
+            <!-- 처방표 -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>원료코드</th>
+                        <th>원료명</th>
+                        <th>성분명</th>
+                        <th>용량(%)</th>
+                    </tr>
+                </thead>
+
+                <tbody id="ingredient-list">
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th colspan="4">합계</th>
+                        <th id="total">0.0000</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <!-- 원료 추가 -->
+            <div class="add-button">
+                <button type="button" onclick="addIngredient()">+</button>
+                <button type="button" onclick="copyPreviousPrescription()">이전 차수 복사</button>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="button-area">
+                <button type="button" onclick="calculationPrescription()">계산</button>
+                <button type="button" onclick="savePrescription()">저장</button>
+                <button type="button"><a href="./note_detail.html">취소</a></button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 차수 계산
+        const rows = window.opener.document.querySelectorAll("tbody tr");
+        const lastRow = rows[rows.length - 1];
+        const lastNumber = Number(lastRow.cells[1].textContent);
+        const nextRound = lastNumber + 1;
+        document.getElementById("round").textContent = nextRound;
+
+        // 오늘 날짜 자동 입력
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+
+        document.getElementById("date").value = year + "-" + month + "-" + day;
+
+
+        // 원료 추가
+        function addIngredient() {
+            const tbody = document.getElementById("ingredient-list");
+            const rowNumber = tbody.rows.length + 1;
+            const row = tbody.insertRow();
+
+            row.innerHTML = `
+                <td>${rowNumber}</td>
+
+                <td>
+                    <select onchange="changeIngredient(this)">
+                        <option value="">선택</option>
+                        <option value="RAW002">RAW002</option>
+                        <option value="RAW003">RAW003</option>
+                        <option value="RAW004">RAW004</option>
+                        <option value="RAW005">RAW005</option>
+                        <option value="RAW006">RAW006</option>
+                        <option value="RAW007">RAW007</option>
+                        <option value="RAW008">RAW008</option>
+                        <option value="RAW009">RAW009</option>
+                        <option value="RAW010">RAW010</option>
+                    </select>
+                </td>
+
+                <td>
+                    <span class="ingredient-name"></span>
+                </td>
+
+                <td>
+                    <span class="ingredient-component"></span>
+                </td>
+
+                <td>
+                    <input type="number"
+                        step="0.0001"
+                        class="amount">
+                </td>
+            `;
+        }
+
+        function changeIngredient(select) {
+            const row = select.closest("tr");
+            const name = row.querySelector(".ingredient-name");
+            const component = row.querySelector(".ingredient-component");
+
+            const ingredientInfo = {
+                RAW002: "B",
+                RAW003: "C",
+                RAW004: "D",
+                RAW005: "E",
+                RAW006: "F",
+                RAW007: "G",
+                RAW008: "H",
+                RAW009: "I",
+                RAW010: "J"
+            };
+
+            const value = select.value;
+            if (value === "") {
+                name.textContent = "";
+                component.textContent = "";
+                return;
+            }
+
+            name.textContent = ingredientInfo[value];
+            component.textContent = ingredientInfo[value];
+        }
+
+        function confirm() {
+            const amountInputs =
+                document.querySelectorAll(".amount");
+
+            if (amountInputs.length === 0) {
+                alert("원료를 1개 이상 입력해 주세요.");
+                return null;
+            }
+
+            // 원료코드 선택 여부 확인
+            const ingredientSelects =
+                document.querySelectorAll("#ingredient-list select");
+
+            for (let i = 0; i < ingredientSelects.length; i++) {
+                if (ingredientSelects[i].value === "") {
+                    alert("원료코드를 선택해 주세요.");
+                    return null;
+                }
+            }
+
+            let total = 0;
+
+            for (let i = 0; i < amountInputs.length; i++) {
+
+                if (amountInputs[i].value === "") {
+                    alert("용량을 입력해 주세요.");
+                    return null;
+                }
+
+                total += Number(amountInputs[i].value);
+            }
+
+            if (total > 100) {
+                alert("용량의 합계가 100을 초과할 수 없습니다.");
+                return null;
+            }
+
+            return total;
+        }
+
+        // 계산
+        function calculationPrescription() {
+            const tbody = document.getElementById("ingredient-list");
+
+            const total = confirm();
+            if (total === null) {
+                return;
+            }
+
+            const remaining = 100 - total;
+
+            // 기존 정제수 행이 있는 경우
+            const waterRow = document.getElementById("water-row");
+
+            if (waterRow) {
+                // 정제수 용량만 수정
+                waterRow.cells[4].textContent =
+                    remaining.toFixed(4);
+
+            } else {
+                // 정제수가 없는 경우 새로 추가
+                const row = tbody.insertRow();
+                row.id = "water-row";
+
+                row.innerHTML = `
+                    <td>${tbody.rows.length}</td>
+                    <td>RAW001</td>
+                    <td>정제수</td>
+                    <td>물</td>
+                    <td>${remaining.toFixed(4)}</td>
+                `;
+            }
+
+            document.getElementById("total").textContent = "100.0000";
+        }
+
+        // 저장
+        function savePrescription() {
+            const viscosity = document.getElementById("viscosity").value;
+            const ph = document.getElementById("ph").value;
+            const scent = document.getElementById("scent").value;
+            const revision = document.getElementById("revision").value;
+
+            if (viscosity === "") {
+                alert("점도를 선택해 주세요.");
+                return;
+            }
+
+            if (ph === "") {
+                alert("PH를 선택해 주세요.");
+                return;
+            }
+
+            if (scent === "") {
+                alert("향을 선택해 주세요.");
+                return;
+            }
+
+            if (revision === "") {
+                alert("수정방안을 입력해 주세요.");
+                return;
+            }
+
+            const total = confirm();
+            if (total === null) {
+                return;
+            }
+
+            const waterRow = document.getElementById("water-row");
+
+            if (!waterRow) {
+                alert("계산버튼을 눌러 용량이 총 100인지 확인해 주세요.");
+                return;
+            }
+
+            const waterAmount = Number(waterRow.cells[4].textContent);
+            const finalTotal = total + waterAmount;
+
+            if (finalTotal !== 100) {
+                alert("계산버튼을 눌러 용량이 총 100인지 확인해 주세요.");
+                return;
+            }
+
+            location.href = "./note_detail.html";
+        }
+
+        function copyPreviousPrescription() {
+            fetch("./prescription_2024_2_2.html")
+                .then(function(response) {
+                    return response.text();
+                })
+                .then(function(html) {
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+
+                    const oldRows = doc.querySelectorAll("tbody tr");
+                    const tbody = document.getElementById("ingredient-list");
+
+                    // 현재 입력된 내용 삭제
+                    tbody.innerHTML = "";
+
+                    oldRows.forEach(function(oldRow) {
+
+                        const cells = oldRow.cells;
+
+                        const code = cells[1].textContent.trim();
+                        const name = cells[2].textContent.trim();
+                        const component = cells[3].textContent.trim();
+                        const amount = cells[4].textContent.trim();
+
+                        // 정제수
+                        if (code === "RAW001") {
+
+                            const row = tbody.insertRow();
+                            row.id = "water-row";
+
+                            row.innerHTML = `
+                                <td>${tbody.rows.length}</td>
+                                <td>RAW001</td>
+                                <td>${name}</td>
+                                <td>${component}</td>
+                                <td>${amount}</td>
+                            `;
+
+                            return;
+                        }
+
+                        // 일반 원료
+                        const row = tbody.insertRow();
+
+                        row.innerHTML = `
+                            <td>${tbody.rows.length}</td>
+
+                            <td>
+                                <select onchange="changeIngredient(this)">
+                                    <option value="">선택</option>
+                                    <option value="RAW002">RAW002</option>
+                                    <option value="RAW003">RAW003</option>
+                                    <option value="RAW004">RAW004</option>
+                                    <option value="RAW005">RAW005</option>
+                                    <option value="RAW006">RAW006</option>
+                                    <option value="RAW007">RAW007</option>
+                                    <option value="RAW008">RAW008</option>
+                                    <option value="RAW009">RAW009</option>
+                                    <option value="RAW010">RAW010</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <span class="ingredient-name"></span>
+                            </td>
+
+                            <td>
+                                <span class="ingredient-component"></span>
+                            </td>
+
+                            <td>
+                                <input type="number"
+                                    step="0.0001"
+                                    class="amount"
+                                    value="${amount}">
+                            </td>
+                        `;
+
+                        // 원료코드 선택
+                        const select = row.querySelector("select");
+                        select.value = code;
+
+                        // 원료명 / 성분명 표시
+                        changeIngredient(select);
+                    });
+
+                    // 합계 표시
+                    document.getElementById("total").textContent = "100.0000";
+                })
+                .catch(function(error) {
+                    alert("이전 차수 처방표를 가져오지 못했습니다.");
+                    console.log(error);
+                });
+        }
+    </script>
+</body>
+</html>

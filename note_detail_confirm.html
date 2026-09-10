@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>네오코스텍 연구소 시스템</title>
+
+    <style>
+        .layout {
+            display: flex;
+        }
+
+        nav {
+            width: 200px;
+        }
+
+        main {
+            flex: 1;
+        }
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			border-top: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.table-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+		}
+
+		.table-header p {
+			margin: 0;
+		}
+
+		th {
+			background-color: #f5f5f5;
+			border-bottom: 1px solid #ddd;
+			padding: 10px;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		td {
+			padding: 10px;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		.info {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			border-bottom: 1px solid #ddd;
+			padding-bottom: 10px;
+			margin-bottom: 15px;
+		}
+
+		.info p {
+			margin: 10px;
+		}
+
+		.info strong {
+			display: inline-block;
+			width: 70px;
+		}
+
+		.search {
+			margin-top: 50px;
+			margin-bottom: 50px;
+		}
+
+		.page-area {
+			display: flex;
+			justify-content: space-between;
+			margin-top: 20px;
+		}
+
+		#comparison {
+			margin-top: 50px;
+		}
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+        <nav>
+			<!-- 로그인 사용자 정보 -->
+			<div class="user-info">
+				<strong>홍연구</strong>
+				<p>담당 거래처 : A사</p>
+			</div>
+            <ul>
+                <li><a href="#">연구노트</a></li>
+                <li>
+                    <span>시스템관리</span>
+                    <ul>
+                        <li><a href="./code.html">코드관리</a></li>
+                        <li><a href="./codegroup.html">코드그룹</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">로그아웃</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h1>연구노트 상세</h1>
+
+			<!-- 정보 -->
+			<div class="info">
+				<p><strong>관리번호:</strong> 2025_7</p>
+				<p>
+					<strong>제품명:</strong>
+					<input type="text" value="물광크림">
+				</p>
+				<p><strong>거래처:</strong> A사</p>
+				<p>
+					<strong>담당:</strong>
+					<input type="text" value="김연구">
+				</p>
+				<p>
+					<strong>부담당:</strong>
+					<input type="text" value="홍연구">
+				</p>
+				<p><strong>현재차수:</strong> 5차</p>
+				<p><strong>상태:</strong> 확정</p>
+				<p><strong>시작일:</strong> 2025-12-20</p>
+				<p><strong>종료일:</strong> 2026-04-10</p>
+			</div>
+			<div>
+				<button type="button">수정</button>
+			</div>
+
+			<!-- 검색 영역 -->
+			<div class="search">
+				<form>
+					<label>기간</label>
+					<input type="text" placeholder="시작일">
+					<input type="text" placeholder="종료일">
+
+					<select>
+						<option selected>점도</option>
+						<option>묽음</option>
+						<option>보통</option>
+						<option>끈적</option>
+					</select>
+
+					<select>
+						<option selected>PH</option>
+						<option>0</option>
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+						<option>9</option>
+						<option>10</option>
+						<option>11</option>
+						<option>12</option>
+						<option>13</option>
+						<option>14</option>
+					</select>
+
+					<select>
+						<option selected>향</option>
+						<option>나쁨</option>
+						<option>좋음</option>
+					</select>
+
+					<select>
+						<option selected>검색구분</option>
+						<option>원료코드</option>
+						<option>원료명</option>
+						<option>성분명</option>
+						<option>수정방안</option>
+					</select>
+
+					<input type="text" placeholder="검색어">
+					<button type="submit">검색</button>
+					<button type="reset">초기화</button>
+				</form>
+			</div>
+
+			<!-- 테이블 영역 -->
+			<div>
+				<div class="table-header">
+					<p>Total: 5</p>
+					<button type="button" disabled>추가</button>
+				</div>
+
+				<table>
+					<thead>
+						<tr>
+							<th><input type="checkbox"></th>
+							<th>#</th>
+							<th>차수</th>
+							<th>점도</th>
+							<th>PH</th>
+							<th>향</th>
+							<th>수정방안</th>
+							<th>날짜</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td><input type="checkbox" data-round="1"></td>
+							<td>1</td>
+							<td><a href="#" onclick="openPrescription(1)">1차</a></td>
+							<td>묽음</td>
+							<td>3</td>
+							<td>나쁨</td>
+							<td>점도 및 향 개선 필요</td>
+							<td>2025-12-20</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" data-round="2"></td>
+							<td>2</td>
+							<td><a href="#" onclick="openPrescription(2)">2차</a></td>
+							<td>끈적</td>
+							<td>3</td>
+							<td>좋음</td>
+							<td>점도 개선 필요</td>
+							<td>2026-01-22</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>3</td>
+							<td>3차</td>
+							<td>묽음</td>
+							<td>4</td>
+							<td>좋음</td>
+							<td>점도개선 필요</td>
+							<td>2026-02-07</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>4</td>
+							<td>4차</td>
+							<td>보통</td>
+							<td>7</td>
+							<td>나쁨</td>
+							<td>향 및 PH 조절 필요</td>
+							<td>2026-03-20</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>5</td>
+							<td>5차</td>
+							<td>보통</td>
+							<td>3</td>
+							<td>좋음</td>
+							<td>-</td>
+							<td>2026-04-10</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="page-area">
+				<!-- 페이징 -->
+				<div>
+					<a href="#">이전</a>
+					<a href="#">1</a>
+					<a href="#">2</a>
+					<a href="#">3</a>
+					<a href="#">다음</a>
+				</div>
+
+				<!-- 버튼 -->
+				<div>
+					<button type="button" onclick="comparePrescription()">비교하기</button>
+					<button type="button" onclick="clearComparison()">비교 초기화</button>
+					<button type="button" disabled>수정</button>
+					<button type="button" disabled>삭제</button>
+					<button type="button"><a href="./note.html">연구노트 메인</a></button>
+				</div>
+			</div>
+			<div id="comparison"></div>
+        </main>
+    </div>
+
+	<script>
+		function openPrescription(round) {
+			location.href = "./prescription_2025_7_" + round + ".html";
+		}
+
+		function comparePrescription() {
+			const checked =
+				document.querySelectorAll(
+					'tbody input[type="checkbox"]:checked'
+				);
+
+			if (checked.length !== 2) {
+				alert("2개 차수를 선택해주세요.");
+				return;
+			}
+
+			const round1 = checked[0].dataset.round;
+			const round2 = checked[1].dataset.round;
+			const file1 = "./prescription_2025_7_" + round1 + ".html";
+			const file2 = "./prescription_2025_7_" + round2 + ".html";
+
+			Promise.all([
+				fetch(file1),
+				fetch(file2)
+			])
+			.then(function(responses) {
+				// 두 파일 중 하나라도 없으면 중단
+				if (!responses[0].ok || !responses[1].ok) {
+					alert("해당 차수의 정보가 없습니다.");
+					return;
+				}
+
+				return Promise.all([
+					responses[0].text(),
+					responses[1].text()
+				]);
+			})
+			.then(function(htmls) {
+				// 파일이 없어서 앞에서 return 된 경우
+				if (!htmls) {
+					return;
+				}
+
+				const parser = new DOMParser();
+				const doc1 =
+					parser.parseFromString(
+						htmls[0],
+						"text/html"
+					);
+				const doc2 =
+					parser.parseFromString(
+						htmls[1],
+						"text/html"
+					);
+				const data1 = getPrescriptionData(doc1);
+				const data2 = getPrescriptionData(doc2);
+
+				drawComparison(round1, round2, data1, data2);
+			})
+			.catch(function(error) {
+				alert("해당 차수의 정보가 없습니다.");
+				console.log(error);
+			});
+		}	
+
+		function getPrescriptionData(doc) {
+			const rows = doc.querySelectorAll("tbody tr");
+			const data = {};
+
+			rows.forEach(function(row) {
+				const code = row.cells[1].textContent.trim();
+				const name = row.cells[2].textContent.trim();
+				const component = row.cells[3].textContent.trim();
+				const amount = Number(row.cells[4].textContent.trim());
+
+				data[code] = {name: name, component: component, amount: amount};
+			});
+
+			return data;
+		}
+
+
+		function drawComparison(round1, round2, data1, data2) {
+			const comparison = document.getElementById("comparison");
+			comparison.innerHTML = "";
+			const codes =
+				new Set([
+					...Object.keys(data1),
+					...Object.keys(data2)
+				]);
+			const table = document.createElement("table");
+
+			table.innerHTML = `
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>원료코드</th>
+						<th>원료명</th>
+						<th>성분명</th>
+						<th>${round1}차 용량</th>
+						<th>${round2}차 용량</th>
+						<th>용량 변화</th>
+					</tr>
+				</thead>
+
+				<tbody></tbody>
+			`;
+
+			const tbody = table.querySelector("tbody");
+			let number = 1;
+
+			codes.forEach(function(code) {
+				const data1Item =
+					data1[code] || {
+						name: "",
+						component: "",
+						amount: 0
+					};
+
+				const data2Item =
+					data2[code] || {
+						name: data1Item.name,
+						component: data1Item.component,
+						amount: 0
+					};
+
+				const change = data2Item.amount - data1Item.amount;
+				let changeText = "-";
+
+				if (change > 0) {
+					changeText =
+						"▲ " + change.toFixed(4);
+				} else if (change < 0) {
+					changeText =
+						"▼ " + Math.abs(change).toFixed(4);
+				}
+
+				const row = tbody.insertRow();
+
+				row.innerHTML = `
+					<td>${number}</td>
+					<td>${code}</td>
+					<td>${data1Item.name || data2Item.name}</td>
+					<td>${data1Item.component || data2Item.component}</td>
+					<td>${data1Item.amount.toFixed(4)}</td>
+					<td>${data2Item.amount.toFixed(4)}</td>
+					<td>${changeText}</td>
+				`;
+
+				number++;
+			});
+
+			comparison.appendChild(table);
+		}
+
+		function createComparisonTable(currentRound, currentData, compareData, codes) {
+			const wrapper = document.createElement("div");
+			wrapper.className = "comparison-table";
+			const title = document.createElement("h3");
+
+			title.textContent = currentRound + "차";
+			wrapper.appendChild(title);
+
+			const table = document.createElement("table");
+
+			table.innerHTML = `
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>원료코드</th>
+						<th>원료명</th>
+						<th>성분명</th>
+						<th>용량(%)</th>
+						<th>용량 변화</th>
+					</tr>
+				</thead>
+
+				<tbody></tbody>
+			`;
+
+			const tbody = table.querySelector("tbody");
+			let number = 1;
+
+			codes.forEach(function(code) {
+				const current =
+					currentData[code] || {
+						name: "",
+						component: "",
+						amount: 0
+					};
+
+				const compare =
+					compareData[code] || {
+						amount: 0
+					};
+
+				const change = compare.amount - current.amount;
+				let changeText = "-";
+
+				if (change > 0) {
+					changeText = "▲" + change.toFixed(4);
+				}
+
+				if (change < 0) {
+					changeText = "▼" + Math.abs(change).toFixed(4);
+				}
+
+				const row = tbody.insertRow();
+
+				row.innerHTML = `
+					<td>${number}</td>
+					<td>${code}</td>
+					<td>${current.name}</td>
+					<td>${current.component}</td>
+					<td>${current.amount.toFixed(4)}</td>
+					<td>${changeText}</td>
+				`;
+
+				number++;
+			});
+
+			wrapper.appendChild(table);
+
+			return wrapper;
+		}
+
+		function clearComparison() {
+			document.getElementById("comparison").innerHTML = "";
+		}
+	</script>
+</body>
+</html>
