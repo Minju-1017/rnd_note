@@ -80,6 +80,11 @@
 		#comparison {
 			margin-top: 50px;
 		}
+
+		h2 {
+			margin-top: 50px;
+			margin-bottom: 20px;
+		}
     </style>
 </head>
 
@@ -93,14 +98,7 @@
 				<p>담당 거래처 : A사</p>
 			</div>
             <ul>
-                <li><a href="#">연구노트</a></li>
-                <li>
-                    <span>시스템관리</span>
-                    <ul>
-                        <li><a href="./code.html">코드관리</a></li>
-                        <li><a href="./codegroup.html">코드그룹</a></li>
-                    </ul>
-                </li>
+                <li><a href="./note.html">연구노트</a></li>
                 <li><a href="#">로그아웃</a></li>
             </ul>
         </nav>
@@ -129,8 +127,11 @@
 				<p><strong>종료일:</strong> 2026-04-10</p>
 			</div>
 			<div>
-				<button type="button">수정</button>
+				<button type="button">기본 정보 수정</button>
 			</div>
+
+			<!-- 연구 차수 -->
+			<h2>차수별 연구 기록</h2>
 
 			<!-- 검색 영역 -->
 			<div class="search">
@@ -138,6 +139,12 @@
 					<label>기간</label>
 					<input type="text" placeholder="시작일">
 					<input type="text" placeholder="종료일">
+
+					<select>
+						<option selected>상태</option>
+						<option>성공</option>
+						<option>실패</option>
+					</select>
 
 					<select>
 						<option selected>점도</option>
@@ -172,11 +179,10 @@
 					</select>
 
 					<select>
-						<option selected>검색구분</option>
+						<option selected>원료</option>
 						<option>원료코드</option>
 						<option>원료명</option>
 						<option>성분명</option>
-						<option>수정방안</option>
 					</select>
 
 					<input type="text" placeholder="검색어">
@@ -189,7 +195,7 @@
 			<div>
 				<div class="table-header">
 					<p>Total: 5</p>
-					<button type="button" disabled>추가</button>
+					<button type="button" disabled>다음 차수 생성</button>
 				</div>
 
 				<table>
@@ -203,6 +209,7 @@
 							<th>향</th>
 							<th>수정방안</th>
 							<th>날짜</th>
+							<th>상태</th>
 						</tr>
 					</thead>
 
@@ -216,16 +223,18 @@
 							<td>나쁨</td>
 							<td>점도 및 향 개선 필요</td>
 							<td>2025-12-20</td>
+							<td>실패</td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" data-round="2"></td>
 							<td>2</td>
-							<td><a href="#" onclick="openPrescription(2)">2차</a></td>
+							<td>2차</td>
 							<td>끈적</td>
 							<td>3</td>
 							<td>좋음</td>
 							<td>점도 개선 필요</td>
 							<td>2026-01-22</td>
+							<td>실패</td>
 						</tr>
 						<tr>
 							<td><input type="checkbox"></td>
@@ -236,6 +245,7 @@
 							<td>좋음</td>
 							<td>점도개선 필요</td>
 							<td>2026-02-07</td>
+							<td>실패</td>
 						</tr>
 						<tr>
 							<td><input type="checkbox"></td>
@@ -246,16 +256,18 @@
 							<td>나쁨</td>
 							<td>향 및 PH 조절 필요</td>
 							<td>2026-03-20</td>
+							<td>실패</td>
 						</tr>
 						<tr>
 							<td><input type="checkbox"></td>
 							<td>5</td>
-							<td>5차</td>
+							<td><a href="#" onclick="openPrescription(5)">5차</a></td>
 							<td>보통</td>
 							<td>3</td>
 							<td>좋음</td>
 							<td>-</td>
 							<td>2026-04-10</td>
+							<td>성공</td>
 						</tr>
 					</tbody>
 				</table>
@@ -275,8 +287,7 @@
 				<div>
 					<button type="button" onclick="comparePrescription()">비교하기</button>
 					<button type="button" onclick="clearComparison()">비교 초기화</button>
-					<button type="button" disabled>수정</button>
-					<button type="button" disabled>삭제</button>
+					<button type="button" disabled>차수 상세</button>
 					<button type="button"><a href="./note.html">연구노트 메인</a></button>
 				</div>
 			</div>
@@ -365,10 +376,14 @@
 			return data;
 		}
 
-
 		function drawComparison(round1, round2, data1, data2) {
 			const comparison = document.getElementById("comparison");
 			comparison.innerHTML = "";
+
+			const title = document.createElement("h2");
+			title.textContent = round1 + "차 vs " + round2 + "차";
+			comparison.appendChild(title);
+
 			const codes =
 				new Set([
 					...Object.keys(data1),
@@ -413,12 +428,14 @@
 				const change = data2Item.amount - data1Item.amount;
 				let changeText = "-";
 
-				if (change > 0) {
-					changeText =
-						"▲ " + change.toFixed(4);
+				if (!data1[code]) {
+					changeText = "신규원료";
+				} else if (!data2[code]) {
+					changeText = "삭제원료";
+				} else if (change > 0) {
+					changeText = "▲ " + change.toFixed(4);
 				} else if (change < 0) {
-					changeText =
-						"▼ " + Math.abs(change).toFixed(4);
+					changeText = "▼ " + Math.abs(change).toFixed(4);
 				}
 
 				const row = tbody.insertRow();
@@ -428,8 +445,8 @@
 					<td>${code}</td>
 					<td>${data1Item.name || data2Item.name}</td>
 					<td>${data1Item.component || data2Item.component}</td>
-					<td>${data1Item.amount.toFixed(4)}</td>
-					<td>${data2Item.amount.toFixed(4)}</td>
+					<td>${data1[code] ? data1Item.amount.toFixed(4) : "없음"}</td>
+					<td>${data2[code] ? data2Item.amount.toFixed(4) : "없음"}</td>
 					<td>${changeText}</td>
 				`;
 
@@ -437,77 +454,6 @@
 			});
 
 			comparison.appendChild(table);
-		}
-
-		function createComparisonTable(currentRound, currentData, compareData, codes) {
-			const wrapper = document.createElement("div");
-			wrapper.className = "comparison-table";
-			const title = document.createElement("h3");
-
-			title.textContent = currentRound + "차";
-			wrapper.appendChild(title);
-
-			const table = document.createElement("table");
-
-			table.innerHTML = `
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>원료코드</th>
-						<th>원료명</th>
-						<th>성분명</th>
-						<th>용량(%)</th>
-						<th>용량 변화</th>
-					</tr>
-				</thead>
-
-				<tbody></tbody>
-			`;
-
-			const tbody = table.querySelector("tbody");
-			let number = 1;
-
-			codes.forEach(function(code) {
-				const current =
-					currentData[code] || {
-						name: "",
-						component: "",
-						amount: 0
-					};
-
-				const compare =
-					compareData[code] || {
-						amount: 0
-					};
-
-				const change = compare.amount - current.amount;
-				let changeText = "-";
-
-				if (change > 0) {
-					changeText = "▲" + change.toFixed(4);
-				}
-
-				if (change < 0) {
-					changeText = "▼" + Math.abs(change).toFixed(4);
-				}
-
-				const row = tbody.insertRow();
-
-				row.innerHTML = `
-					<td>${number}</td>
-					<td>${code}</td>
-					<td>${current.name}</td>
-					<td>${current.component}</td>
-					<td>${current.amount.toFixed(4)}</td>
-					<td>${changeText}</td>
-				`;
-
-				number++;
-			});
-
-			wrapper.appendChild(table);
-
-			return wrapper;
 		}
 
 		function clearComparison() {
