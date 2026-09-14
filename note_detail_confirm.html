@@ -110,7 +110,7 @@
 				<p><strong>관리번호:</strong> 2025_7</p>
 				<p>
 					<strong>제품명:</strong>
-					<input type="text" value="물광크림">
+					<input type="text" id="productName" value="물광크림">
 				</p>
 				<p><strong>거래처:</strong> A사</p>
 				<p>
@@ -226,7 +226,7 @@
 							<td>실패</td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" data-round="2"></td>
+							<td><input type="checkbox"></td>
 							<td>2</td>
 							<td>2차</td>
 							<td>끈적</td>
@@ -259,7 +259,7 @@
 							<td>실패</td>
 						</tr>
 						<tr>
-							<td><input type="checkbox"></td>
+							<td><input type="checkbox" data-round="5"></td>
 							<td>5</td>
 							<td><a href="#" onclick="openPrescription(5)">5차</a></td>
 							<td>보통</td>
@@ -296,8 +296,12 @@
     </div>
 
 	<script>
+		
 		function openPrescription(round) {
-			location.href = "./prescription_2025_7_" + round + ".html";
+			const product = document.getElementById("productName").value;
+
+			location.href = "./prescription_2025_7_" + round + 
+				".html?product=" + encodeURIComponent(product) + "&round=" + round;
 		}
 
 		function comparePrescription() {

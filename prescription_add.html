@@ -60,7 +60,18 @@
         }
 
         .button-area button {
-            margin: 0 5px;
+            margin: 0;
+        }
+
+        .attachment {
+            margin: 20px 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .attachment p {
+            margin: 0;
+            width: 70px;
         }
 
         tfoot {
@@ -139,6 +150,12 @@
                 </p>
             </div>
 
+            <!-- 첨부파일 -->
+            <div class="attachment">
+                <p><strong>첨부파일:</strong></p>
+                <input type="file" multiple accept="image/*,.pdf">
+            </div>
+
             <!-- 처방표 -->
             <table>
                 <thead>
@@ -148,6 +165,7 @@
                         <th>원료명</th>
                         <th>성분명</th>
                         <th>용량(%)</th>
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -156,7 +174,7 @@
 
                 <tfoot>
                     <tr>
-                        <th colspan="4">합계</th>
+                        <th colspan="5">합계</th>
                         <th id="total">0.0000</th>
                     </tr>
                 </tfoot>
@@ -171,6 +189,7 @@
             <!-- 버튼 -->
             <div class="button-area">
                 <button type="button" onclick="calculationPrescription()">계산</button>
+                <button type="button" onclick="resetPrescription()">초기화</button>
                 <button type="button" onclick="savePrescription()">저장</button>
                 <button type="button"><a href="./note_detail.html">취소</a></button>
             </div>
@@ -179,20 +198,19 @@
 
     <script>
         // 차수 계산
-        const rows = window.opener.document.querySelectorAll("tbody tr");
-        const lastRow = rows[rows.length - 1];
-        const lastNumber = Number(lastRow.cells[1].textContent);
-        const nextRound = lastNumber + 1;
+        const params = new URLSearchParams(location.search);
+        const nextRound = params.get("round");
+
         document.getElementById("round").textContent = nextRound;
 
         // 오늘 날짜 자동 입력
         const today = new Date();
+
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, "0");
         const day = String(today.getDate()).padStart(2, "0");
 
-        document.getElementById("date").value = year + "-" + month + "-" + day;
-
+        document.getElementById("date").textContent =  year + "-" + month + "-" + day;
 
         // 원료 추가
         function addIngredient() {
@@ -227,14 +245,31 @@
                 </td>
 
                 <td>
-                    <input type="number"
-                        step="0.0001"
-                        class="amount">
+                    <input type="number" step="0.0001" min="0.0001" class="amount">
+                </td>
+                
+                <td>
+                    <button type="button" onclick="deleteIngredient(this)">X</button>
                 </td>
             `;
         }
 
         function changeIngredient(select) {
+            const selectedValue = select.value;
+
+            // 다른 행에서 이미 선택한 원료인지 확인
+            if (selectedValue !== "") {
+                const selects = document.querySelectorAll("#ingredient-list select");
+
+                for (let i = 0; i < selects.length; i++) {
+                    if (selects[i] !== select && selects[i].value === selectedValue) {
+                        alert("이미 선택한 원료입니다.");
+                        select.value = "";
+                        return;
+                    }
+                }
+            }
+
             const row = select.closest("tr");
             const name = row.querySelector(".ingredient-name");
             const component = row.querySelector(".ingredient-component");
@@ -282,12 +317,29 @@
                 }
             }
 
+            const selectedCodes = [];
+
+            for (let i = 0; i < ingredientSelects.length; i++) {
+                const code = ingredientSelects[i].value;
+
+                if (selectedCodes.includes(code)) {
+                    alert("중복된 원료가 있습니다.");
+                    return null;
+                }
+
+                selectedCodes.push(code);
+            }
+
             let total = 0;
 
             for (let i = 0; i < amountInputs.length; i++) {
-
                 if (amountInputs[i].value === "") {
                     alert("용량을 입력해 주세요.");
+                    return null;
+                }
+
+                if (parseFloat(amountInputs[i].value) <= 0) {
+                    alert("용량은 0보다 커야 합니다.");
                     return null;
                 }
 
@@ -305,15 +357,13 @@
         // 계산
         function calculationPrescription() {
             const tbody = document.getElementById("ingredient-list");
-
             const total = confirm();
+
             if (total === null) {
                 return;
             }
 
             const remaining = 100 - total;
-
-            // 기존 정제수 행이 있는 경우
             const waterRow = document.getElementById("water-row");
 
             if (waterRow) {
@@ -332,8 +382,25 @@
                     <td>정제수</td>
                     <td>물</td>
                     <td>${remaining.toFixed(4)}</td>
+                    <td>
+                        <button type="button" onclick="deleteIngredient(this)">X</button>
+                    </td>
                 `;
             }
+
+            // 정제수를 맨 위로 이동
+            const water = document.getElementById("water-row");
+
+            if (water) {
+                tbody.insertBefore(water, tbody.firstChild);
+            }
+
+            // 순번 다시 정리
+            const rows = tbody.querySelectorAll("tr");
+
+            rows.forEach(function(row, index) {
+                row.cells[0].textContent = index + 1;
+            });
 
             document.getElementById("total").textContent = "100.0000";
         }
@@ -388,8 +455,24 @@
             location.href = "./note_detail.html";
         }
 
+        function resetPrescription() {
+            const tbody = document.getElementById("ingredient-list");
+            tbody.innerHTML = "";
+            document.getElementById("total").textContent = "0.0000";
+        }
+
         function copyPreviousPrescription() {
-            fetch("./prescription_2024_2_2.html")
+            const params = new URLSearchParams(location.search);
+            const round = Number(params.get("round"));
+
+            if (round === 1) {
+                alert("이전 차수가 없습니다.");
+                return;
+            }
+
+            const previousRound = round - 1;
+
+            fetch("./prescription_2024_2_" + previousRound + ".html")
                 .then(function(response) {
                     return response.text();
                 })
@@ -407,15 +490,24 @@
                     oldRows.forEach(function(oldRow) {
 
                         const cells = oldRow.cells;
+                        const codeCell = cells[1];
+                        const amountCell = cells[4];
+                        const codeSelect = codeCell.querySelector("select");
+                        const amountInput = amountCell.querySelector("input");
 
-                        const code = cells[1].textContent.trim();
+                        const code = codeSelect
+                            ? codeSelect.value
+                            : codeCell.textContent.trim();
+
                         const name = cells[2].textContent.trim();
                         const component = cells[3].textContent.trim();
-                        const amount = cells[4].textContent.trim();
+
+                        const amount = amountInput
+                            ? amountInput.value
+                            : amountCell.textContent.trim();
 
                         // 정제수
                         if (code === "RAW001") {
-
                             const row = tbody.insertRow();
                             row.id = "water-row";
 
@@ -425,6 +517,9 @@
                                 <td>${name}</td>
                                 <td>${component}</td>
                                 <td>${amount}</td>
+                                <td>
+                                    <button type="button" onclick="deleteIngredient(this)">X</button>
+                                </td>
                             `;
 
                             return;
@@ -460,10 +555,11 @@
                             </td>
 
                             <td>
-                                <input type="number"
-                                    step="0.0001"
-                                    class="amount"
-                                    value="${amount}">
+                                <input type="number" step="0.0001" min="0.0001" class="amount" value="${amount}">
+                            </td>
+
+                            <td>
+                                <button type="button" onclick="deleteIngredient(this)">X</button>
                             </td>
                         `;
 
@@ -482,6 +578,37 @@
                     alert("이전 차수 처방표를 가져오지 못했습니다.");
                     console.log(error);
                 });
+        }
+
+        function deleteIngredient(button) {
+            const row = button.closest("tr");
+            row.remove();
+
+            // 순번 다시 정리
+            const rows = document.querySelectorAll("#ingredient-list tr");
+
+            rows.forEach(function(row, index) {
+                row.cells[0].textContent = index + 1;
+            });
+
+            // 현재 처방 용량 합계 계산
+            let total = 0;
+
+            const amountInputs = document.querySelectorAll("#ingredient-list .amount");
+
+            amountInputs.forEach(function(input) {
+                total += Number(input.value) || 0;
+            });
+
+            // 정제수처럼 input이 아닌 용량도 포함
+            const waterRow = document.getElementById("water-row");
+
+            if (waterRow) {
+                total += Number(waterRow.cells[4].textContent) || 0;
+            }
+
+            document.getElementById("total").textContent =
+                total.toFixed(4);
         }
     </script>
 </body>

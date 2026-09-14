@@ -110,7 +110,7 @@
 				<p><strong>관리번호:</strong> 2024_2</p>
 				<p>
 					<strong>제품명:</strong>
-					<input type="text" value="쫀쫀앰플">
+					<input type="text" id="productName" value="쫀쫀앰플">
 				</p>
 				<p><strong>거래처:</strong> A사</p>
 				<p>
@@ -195,7 +195,7 @@
 			<div>
 				<div class="table-header">
 					<p>Total: 2</p>
-					<button type="button"><a href="./prescription_add.html">다음 차수 생성</a></button>
+					<button type="button" onclick="createNextRound()">다음 차수 생성</button>
 				</div>
 
 				<table>
@@ -263,8 +263,28 @@
     </div>
 
 	<script>
+		function createNextRound() {
+			const rows = document.querySelectorAll("tbody tr");
+
+			// 차수가 하나도 없는 경우 1차 생성
+			if (rows.length === 0) {
+				location.href = "./prescription_add.html?round=1";
+				return;
+			}
+
+			const lastRow = rows[rows.length - 1];
+			const lastRoundText = lastRow.cells[2].textContent.trim();
+			const lastRound = parseInt(lastRoundText.replace("차", ""));
+			const nextRound = lastRound + 1;
+
+			location.href = "./prescription_add.html?round=" + nextRound;
+		}
+
 		function openPrescription(round) {
-			location.href = "./prescription_2024_2_" + round + ".html";
+			const product = document.getElementById("productName").value;
+
+			location.href = "./prescription_2024_2_" + round + 
+				".html?product=" + encodeURIComponent(product) + "&round=" + round;
 		}
 
 		function comparePrescription() {

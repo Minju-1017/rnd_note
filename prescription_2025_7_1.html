@@ -42,7 +42,7 @@
 
         .info {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
         }
 
         .info p {
@@ -52,6 +52,15 @@
         .button-area {
             margin-top: 15px;
             text-align: right;
+        }
+
+        .attachment {
+            margin: 10px;
+            margin-bottom: 20px;
+        }
+
+        .attachment a {
+            margin-left: 15px;
         }
     </style>
 </head>
@@ -70,17 +79,22 @@
             </ul>
         </nav>
         <main>
-            <h1>처방표</h1>
+            <h1 id="title"></h1>
 
             <!-- 연구 정보 -->
             <div class="info">
-                <p><strong>차수:</strong> 1차</p>
                 <p><strong>점도:</strong> 묽음</p>
                 <p><strong>PH:</strong> 3</p>
                 <p><strong>향:</strong> 나쁨</p>
                 <p><strong>수정방안:</strong> 점도 및 향 개선 필요</p>
                 <p><strong>날짜:</strong> 2025-12-20</p>
                 <p><strong>상태:</strong> 실패</p>
+            </div>
+
+            <div class="attachment">
+                <strong>첨부파일:</strong>
+                <a href="#">결과사진.jpg</a>
+                <a href="#">시험성적서.pdf</a>
             </div>
 
             <!-- 처방표 -->
@@ -138,5 +152,15 @@
             </div>
         </main>
     </div>
+
+    <script>
+        const params = new URLSearchParams(location.search);
+
+        const product = params.get("product");
+        const round = params.get("round");
+
+        document.getElementById("title").textContent =
+            product + " - " + round + "차 상세";
+    </script>
 </body>
 </html>
