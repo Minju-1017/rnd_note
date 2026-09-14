@@ -85,6 +85,10 @@
 			margin-top: 50px;
 			margin-bottom: 20px;
 		}
+
+		.user-info p {
+            margin: 3px 0;
+        }
     </style>
 </head>
 
@@ -95,10 +99,14 @@
 			<!-- 로그인 사용자 정보 -->
 			<div class="user-info">
 				<strong>홍연구</strong>
+				<p>역할 : 연구원</p>
 				<p>담당 거래처 : A사</p>
 			</div>
             <ul>
                 <li><a href="./note.html">연구노트</a></li>
+				<li><a href="./ingredient_search.html">원료검색</a></li>
+				<li><a href="./legacy_data.html">자료관리</a></li>
+				<li><a href="./permission.html">권한 안내</a></li>
                 <li><a href="#">로그아웃</a></li>
             </ul>
         </nav>
@@ -254,7 +262,6 @@
 				<div>
 					<button type="button" onclick="comparePrescription()">비교하기</button>
 					<button type="button" onclick="clearComparison()">비교 초기화</button>
-					<button type="button">차수 상세</button>
 					<button type="button"><a href="./note.html">연구노트 메인</a></button>
 				</div>
 			</div>

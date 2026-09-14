@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>네오코스텍 연구소 시스템</title>
+
+    <style>
+        .layout {
+            display: flex;
+        }
+
+        nav {
+            width: 200px;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .search {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .page-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <nav>
+            <!-- 로그인 사용자 정보 -->
+            <div class="user-info">
+                <strong>홍연구</strong>
+                <p>역할 : 연구원</p>
+                <p>담당 거래처 : A사</p>
+            </div>
+
+            <ul>
+                <li><a href="./note.html">연구노트</a></li>
+                <li><a href="./ingredient_search.html">원료검색</a></li>
+                <li><a href="./legacy_data.html">자료관리</a></li>
+                <li><a href="./permission.html">권한 안내</a></li>
+                <li><a href="#">로그아웃</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <h1>권한 안내</h1>
+
+            <!-- 역할별 권한 -->
+            <div class="search">
+                <h3>역할별 권한</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>역할</th>
+                            <th>연구노트 조회</th>
+                            <th>기본 정보 수정</th>
+                            <th>처방 수정</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>연구소장</td>
+                            <td>전체</td>
+                            <td>전체</td>
+                            <td>전체</td>
+                        </tr>
+						<tr>
+                            <td>연구원</td>
+                            <td>담당 거래처</td>
+                            <td>담당자 / 부담당자</td>
+                            <td>담당자 / 부담당자</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 주요 권한 규칙 -->
+            <div>
+                <h3>주요 권한 규칙</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>권한 내용</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>연구노트 조회</td>
+                            <td>연구원은 담당 거래처의 연구노트를 조회할 수 있습니다.</td>
+                        </tr>
+
+                        <tr>
+                            <td>연구노트 수정</td>
+                            <td>담당자 또는 부담당자가 연구노트를 수정할 수 있습니다.</td>
+                        </tr>
+
+                        <tr>
+                            <td>확정 처방</td>
+                            <td>고객사 확정 후 처방 내용은 수정할 수 없습니다.</td>
+                        </tr>
+
+                        <tr>
+                            <td>연구소장</td>
+                            <td>모든 거래처의 연구노트를 조회할 수 있습니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

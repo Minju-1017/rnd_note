@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>네오코스텍 연구소 시스템</title>
+
+    <style>
+        .layout {
+            display: flex;
+        }
+
+        nav {
+            width: 200px;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .search {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .page-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .user-info p {
+            margin: 3px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <nav>
+            <!-- 로그인 사용자 정보 -->
+            <div class="user-info">
+                <strong>홍연구</strong>
+                <p>역할 : 연구원</p>
+                <p>담당 거래처 : A사</p>
+            </div>
+            <ul>
+                <li><a href="./note.html">연구노트</a></li>
+                <li><a href="./ingredient_search.html">원료검색</a></li>
+                <li><a href="./legacy_data.html">자료관리</a></li>
+                <li><a href="./permission.html">권한 안내</a></li>
+                <li><a href="#">로그아웃</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h1>원료검색</h1>
+
+            <!-- 검색 영역 -->
+            <div class="search">
+                <form>
+                    <select>
+                        <option>선택</option>
+                        <option>원료코드</option>
+                        <option selected>원료명</option>
+                        <option>성분명</option>
+                    </select>
+
+                    <input type="text" value="B" placeholder="검색어">
+
+                    <button type="submit">검색</button>
+                    <button type="reset">초기화</button>
+                </form>
+            </div>
+
+            <!-- 검색 결과 -->
+            <div>
+
+                <p>Total: 4</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>원료코드</th>
+                            <th>원료명</th>
+                            <th>성분명</th>
+                            <th>관리번호</th>
+                            <th>제품명 - 차수</th>
+                            <th>거래처</th>
+                            <th>담당</th>
+                            <th>부담당</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>1</td>
+                            <td>RAW002</td>
+                            <td>B</td>
+                            <td>성분B</td>
+                            <td>2024_2</td>
+                            <td><a href="./prescription_2024_2_1.html?product=쫀쫀앰플&round=1">쫀쫀앰플 - 1차</a></td>
+                            <td>A사</td>
+                            <td>박연구</td>
+                            <td>홍연구</td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>RAW002</td>
+                            <td>B</td>
+                            <td>성분B</td>
+                            <td>2024_2</td>
+                            <td><a href="./prescription_2024_2_2.html?product=쫀쫀앰플&round=2">쫀쫀앰플 - 2차</a></td>
+                            <td>A사</td>
+                            <td>박연구</td>
+                            <td>홍연구</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>RAW002</td>
+                            <td>B</td>
+                            <td>성분B</td>
+                            <td>2025_7</td>
+                            <td><a href="./prescription_2025_7_1.html?product=물광크림&round=1">물광크림 - 1차</a></td>
+                            <td>A사</td>
+                            <td>김연구</td>
+                            <td>홍연구</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>RAW002</td>
+                            <td>B</td>
+                            <td>성분B</td>
+                            <td>2025_7</td>
+                            <td><a href="./prescription_2025_7_5.html?product=물광크림&round=5">물광크림 - 5차</a></td>
+                            <td>A사</td>
+                            <td>김연구</td>
+                            <td>홍연구</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 페이징 -->
+            <div class="page-area">
+                <div>
+                    <a href="#">이전</a>
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">다음</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
