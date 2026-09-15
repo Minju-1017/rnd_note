@@ -298,6 +298,14 @@
 
         function addIngredient() {
             const tbody = document.getElementById("ingredient-list");
+
+            // "입력된 처방이 없습니다." 문구 제거
+            if (tbody.rows.length === 1 &&
+                tbody.rows[0].cells.length === 1 &&
+                tbody.rows[0].cells[0].colSpan === 6) {
+                tbody.innerHTML = "";
+            }
+
             const rowNumber = tbody.rows.length + 1;
             const row = tbody.insertRow();
 
@@ -545,7 +553,13 @@
 
         function resetPrescription() {
             const tbody = document.getElementById("ingredient-list");
-            tbody.innerHTML = "";
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6">입력된 처방이 없습니다.</td>
+                </tr>
+            `;
+
             document.getElementById("total").textContent = "0.0000";
         }
 
@@ -669,6 +683,7 @@
         }
 
         function deleteIngredient(button) {
+            const tbody = document.getElementById("ingredient-list");
             const row = button.closest("tr");
             row.remove();
 
@@ -697,8 +712,18 @@
                 total += Number(waterRow.cells[4].textContent) || 0;
             }
 
-            document.getElementById("total").textContent =
-                total.toFixed(4);
+            if (document.querySelectorAll("#ingredient-list tr").length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">입력된 처방이 없습니다.</td>
+                    </tr>
+                `;
+
+                document.getElementById("total").textContent = "0.0000";
+            } else {
+                document.getElementById("total").textContent =
+                    total.toFixed(4);
+            }
         }
     </script>
 </body>

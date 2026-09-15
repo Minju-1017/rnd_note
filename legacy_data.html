@@ -75,7 +75,7 @@
         </nav>
         <main>
             <h1>자료관리</h1>
-			<p>기존 Excel, HWP, PDF 등의 연구자료를 등록하고 보관합니다.</p>
+			<p>기존 연구자료를 등록하고 보관합니다. (Excel, HWP, PDF, PNG, JPG 등)</p>
 			<!-- 기존 자료 업로드 -->
         <div class="search">
             <h3>기존 연구자료 보관</h3>
@@ -100,6 +100,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th><input type="checkbox"></th>
                         <th>#</th>
                         <th>파일명</th>
                         <th>자료 설명</th>
@@ -109,6 +110,7 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td><input type="checkbox"></td>
                         <td>1</td>
                         <td>2025_물광크림_연구자료.xlsx</td>
                         <td>물광크림 기존 연구자료</td>
@@ -116,6 +118,7 @@
                         <td>2026-09-14</td>
                     </tr>
                     <tr>
+                        <td><input type="checkbox"></td>
                         <td>2</td>
                         <td>수분크림_실험노트.hwp</td>
                         <td>기존 실험노트</td>
@@ -123,6 +126,7 @@
                         <td>2026-09-13</td>
                     </tr>
                     <tr>
+                        <td><input type="checkbox"></td>
                         <td>3</td>
                         <td>A사_샘플자료.pdf</td>
                         <td>A사 관련 기존 연구자료</td>
@@ -135,13 +139,19 @@
 
         <!-- 페이징 -->
         <div class="page-area">
-            <div>
-                <a href="#">이전</a>
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">다음</a>
-            </div>
+            <!-- 페이징 -->
+				<div>
+					<a href="#">이전</a>
+					<a href="#">1</a>
+					<a href="#">2</a>
+					<a href="#">3</a>
+					<a href="#">다음</a>
+				</div>
+
+				<!-- 삭제 -->
+				<div>
+					<button type="button" onclick="editNote()">삭제</button>
+				</div>
         </div>
     </main>
 

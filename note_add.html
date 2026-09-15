@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>네오코스텍 연구소 시스템</title>
+
+    <style>
+        .layout {
+            display: flex;
+        }
+
+        nav {
+            width: 200px;
+        }
+
+        main {
+            flex: 1;
+        }
+
+		.info {
+			display: grid;
+			grid-template-columns: repeat(1, 1fr);
+			padding-bottom: 10px;
+			margin-bottom: 15px;
+		}
+
+		.info p {
+			margin: 10px;
+		}
+
+		.info strong {
+			display: inline-block;
+			width: 70px;
+		}
+
+		.user-info p {
+            margin: 3px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+        <nav>
+			<!-- 로그인 사용자 정보 -->
+			<div class="user-info">
+				<strong>홍연구</strong>
+				<p>연구원 (2등급)</p>
+                <p>담당 거래처: A사</p>
+			</div>
+            <ul>
+                <li><a href="./note.html">연구노트</a></li>
+				<li><a href="./ingredient_search.html">원료검색</a></li>
+				<li><a href="./legacy_data.html">자료관리</a></li>
+				<li><a href="./permission.html">권한안내</a></li>
+                <li><a href="#">로그아웃</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h1>연구노트 생성</h1>
+
+			<!-- 정보 -->
+			<div class="info">
+				<p><strong>관리번호:</strong> <span id="managementNumber"></span></p>
+				<p>
+					<strong>제품명:</strong>
+					<input type="text" id="productName">
+				</p>
+				<p><strong>거래처:</strong> <span id="company">A사</span></p>
+				<p><strong>담당:</strong> <span id="manager">홍연구</span></p>
+				<p>
+					<strong>부담당:</strong>
+					<input type="text" id="subManager">
+				</p>
+				<p><strong>현재차수:</strong> <span id="currentRound">1차</span></p>
+				<p><strong>상태:</strong> <span id="status">진행</span></p>
+				<p><strong>시작일:</strong> <span id="startDate"></span></p>
+			</div>
+			<div>
+				<button type="button" onclick="createNote()">확인</button>
+				<button type="button"><a href="./note.html">취소</a></button>
+			</div>
+        </main>
+    </div>
+
+	<script>
+		const params = new URLSearchParams(location.search);
+		const managementNumber = params.get("managementNumber");
+
+		document.getElementById("managementNumber").textContent = managementNumber;
+
+		const today = new Date();
+		const year = today.getFullYear();
+		const month = String(today.getMonth() + 1).padStart(2, "0");
+		const day = String(today.getDate()).padStart(2, "0");
+
+		document.getElementById("startDate").textContent = `${year}-${month}-${day}`;
+
+		function createNote() {
+			const productName = document.getElementById("productName").value.trim();
+			const subManager = document.getElementById("subManager").value.trim();
+
+			if (productName === "") {
+				alert("제품명을 입력해 주세요.");
+				return;
+			}
+
+			if (subManager === "") {
+				alert("부담당을 입력해 주세요.");
+				return;
+			}
+
+			const managementNumber = document.getElementById("managementNumber").textContent;
+			const company = document.getElementById("company").textContent;
+			const manager = document.getElementById("manager").textContent;
+			const currentRound = document.getElementById("currentRound").textContent;
+			const status = document.getElementById("status").textContent;
+			const startDate = document.getElementById("startDate").textContent;
+			const params = new URLSearchParams();
+
+			params.set("managementNumber", managementNumber);
+			params.set("productName", productName);
+			params.set("company", company);
+			params.set("manager", manager);
+			params.set("subManager", subManager);
+			params.set("currentRound", currentRound);
+			params.set("status", status);
+			params.set("startDate", startDate);
+
+			location.href = "./note_new.html?" + params.toString();
+		}
+	</script>
+</body>
+</html>

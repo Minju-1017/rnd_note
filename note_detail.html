@@ -203,7 +203,7 @@
 			<div>
 				<div class="table-header">
 					<p>Total: 2</p>
-					<button type="button" onclick="createNextRound()">다음 차수 생성</button>
+					<button type="button" onclick="createNextRound()">차수 생성</button>
 				</div>
 
 				<table>
@@ -359,17 +359,40 @@
 			const data = {};
 
 			rows.forEach(function(row) {
-				const code = row.cells[1].textContent.trim();
-				const name = row.cells[2].textContent.trim();
-				const component = row.cells[3].textContent.trim();
-				const amount = Number(row.cells[4].textContent.trim());
+				// 원료코드
+				const codeSelect = row.cells[1].querySelector("select");
+				
+				const code = codeSelect
+					? codeSelect.value
+					: row.cells[1].textContent.trim();
 
-				data[code] = {name: name, component: component, amount: amount};
+				// 원료명
+				const name = row.cells[2].textContent.trim();
+
+				// 성분명
+				const component = row.cells[3].textContent.trim();
+
+				// 용량
+				const amountInput = row.cells[4].querySelector("input");
+
+				const amount = amountInput
+					? Number(amountInput.value)
+					: Number(row.cells[4].textContent.trim());
+
+				// 빈 행은 제외
+				if (code === "") {
+					return;
+				}
+
+				data[code] = {
+					name: name,
+					component: component,
+					amount: amount
+				};
 			});
 
 			return data;
 		}
-
 		function drawComparison(round1, round2, data1, data2) {
 			const comparison = document.getElementById("comparison");
 			comparison.innerHTML = "";
